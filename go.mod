@@ -1,6 +1,6 @@
 module github.com/91go/feedgen
 
-go 1.21.4
+go 1.21
 
 require (
 	github.com/gorilla/feeds v1.1.2
