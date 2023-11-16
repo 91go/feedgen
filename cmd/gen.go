@@ -19,23 +19,26 @@ var genCmd = &cobra.Command{
 	Short: "A brief description of your command",
 	Run: func(cmd *cobra.Command, args []string) {
 		filename, _ := cmd.Flags().GetString("filename")
+		title, _ := cmd.Flags().GetString("title")
+		description, _ := cmd.Flags().GetString("description")
+		link, _ := cmd.Flags().GetString("link")
+		author, _ := cmd.Flags().GetString("author")
+		mail, _ := cmd.Flags().GetString("mail")
 		cts, _ := os.ReadFile(filename)
 		now := time.Now()
 
 		feed := &feeds.Feed{
-			Title:       "docs-training",
-			Link:        &feeds.Link{Href: "https://blog.wrss.top"},
-			Description: "discussion about tech, footie, photos",
-			Author:      &feeds.Author{Name: "hhacking", Email: "yyzw@live.com"},
+			Title:       title,
+			Link:        &feeds.Link{Href: link},
+			Description: description,
+			Author:      &feeds.Author{Name: author, Email: mail},
 			Created:     now,
 		}
 
 		feed.Items = []*feeds.Item{
 			{
-				Title: fmt.Sprintf("[%s] docs-training", GetToday()),
-				// Link:        &feeds.Link{Href: "http://jmoiron.net/blog/limiting-concurrency-in-go/"},
-				// Description: "A discussion on controlled parallelism in golang",
-				Author:  &feeds.Author{Name: "hhacking", Email: "yyzw@live.com"},
+				Title:   fmt.Sprintf("[%s] %s", GetToday(), title),
+				Author:  &feeds.Author{Name: author, Email: mail},
 				Content: string(cts),
 				Id:      strconv.Itoa(rand.Intn(9999999)),
 				Created: now,
@@ -63,68 +66,6 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// genCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-}
-
-// Feed 通用Feed
-type Feed struct {
-	URL, Author string
-	UpdatedTime time.Time
-	Title       string
-}
-
-// Item feed的item
-type Item struct {
-	UpdatedTime time.Time
-	Enclosure   *feeds.Enclosure
-	URL         string
-	Title       string
-	Contents    string
-	ID          string
-	Author      string
-}
-
-// Rss 输出rss
-func Rss(fe *Feed, items []Item) string {
-	if len(items) == 0 {
-		feed := feeds.Feed{
-			Title:   fe.Title,
-			Link:    &feeds.Link{Href: fe.URL},
-			Author:  &feeds.Author{Name: fe.Author},
-			Updated: fe.UpdatedTime,
-		}
-		atom, _ := feed.ToRss()
-		return atom
-	}
-
-	return rss(fe, items)
-}
-
-func rss(fe *Feed, items []Item) string {
-	feed := feeds.Feed{
-		Title:   fe.Title,
-		Link:    &feeds.Link{Href: fe.URL},
-		Author:  &feeds.Author{Name: fe.Author},
-		Updated: items[0].UpdatedTime, // 直接使用最新item的时间戳
-	}
-
-	for key := range items {
-		feed.Add(&feeds.Item{
-			Title:       items[key].Title,
-			Link:        &feeds.Link{Href: items[key].URL},
-			Description: items[key].Contents,
-			Author:      &feeds.Author{Name: items[key].Author},
-			Id:          items[key].ID,
-			Enclosure:   items[key].Enclosure,
-			Updated:     items[key].UpdatedTime,
-		})
-	}
-
-	// 输出atom，跟rsshub保持一致
-	atom, err := feed.ToAtom()
-	if err != nil {
-		return ""
-	}
-	return atom
 }
 
 // GetToday 获取今天的零点时间
