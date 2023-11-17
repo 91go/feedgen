@@ -51,7 +51,6 @@ func init() {
 	}
 	rootCmd.PersistentFlags().StringP("title", "n", "interview-questions", "custom feed title")
 	rootCmd.PersistentFlags().StringP("description", "d", "feedgen is a cli tool that help you quickly build RSS feed", "custom feed description")
-	rootCmd.PersistentFlags().StringP("link", "l", "https://github.com/dashboard", "custom feed link")
 	rootCmd.PersistentFlags().StringP("author", "a", "nobody", "custom feed author")
 	rootCmd.PersistentFlags().StringP("mail", "m", "nobody@gmail.com", "custom author's mail")
 }
