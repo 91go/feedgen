@@ -21,7 +21,6 @@ var genCmd = &cobra.Command{
 		filename, _ := cmd.Flags().GetString("filename")
 		title, _ := cmd.Flags().GetString("title")
 		description, _ := cmd.Flags().GetString("description")
-		link, _ := cmd.Flags().GetString("link")
 		author, _ := cmd.Flags().GetString("author")
 		mail, _ := cmd.Flags().GetString("mail")
 		cts, _ := os.ReadFile(filename)
@@ -29,7 +28,6 @@ var genCmd = &cobra.Command{
 
 		feed := &feeds.Feed{
 			Title:       title,
-			Link:        &feeds.Link{Href: link},
 			Description: description,
 			Author:      &feeds.Author{Name: author, Email: mail},
 			Created:     now,
