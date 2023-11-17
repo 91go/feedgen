@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"log"
-	"math/rand"
 	"os"
 	"strconv"
 	"time"
@@ -38,12 +37,12 @@ var genCmd = &cobra.Command{
 				Title:   fmt.Sprintf("[%s] %s", GetToday(), title),
 				Author:  &feeds.Author{Name: author, Email: mail},
 				Content: string(cts),
-				Id:      strconv.Itoa(rand.Intn(9999999)),
+				Id:      strconv.Itoa(int(time.Now().Unix())),
 				Created: now,
 			},
 		}
 
-		atom, err := feed.ToAtom()
+		atom, err := feed.ToRss()
 		if err != nil {
 			log.Fatal(err)
 		}
